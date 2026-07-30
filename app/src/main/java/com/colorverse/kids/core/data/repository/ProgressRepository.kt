@@ -25,22 +25,21 @@ class ProgressRepository(private val userProgressDao: UserProgressDao) {
     }
 
     suspend fun addReward(xpGained: Int, coinsGained: Int, starsGained: Int) {
-        val current = userProgressDao.getUserProgress()
-        // Simple update logic
-        val currentXp = 50 + xpGained
-        val currentCoins = 100 + coinsGained
-        val currentStars = 15 + starsGained
-        val newLevel = 1 + (currentXp / 100)
+        val currentEntity = userProgressDao.getUserProgressDirect()
+        val currentXp = (currentEntity?.currentXp ?: 0) + xpGained
+        val currentCoins = (currentEntity?.coins ?: 100) + coinsGained
+        val currentStars = (currentEntity?.stars ?: 15) + starsGained
+        val newLevel = (currentEntity?.level ?: 1) + (currentXp / 100)
 
         val updated = UserProgressEntity(
             id = 1,
             level = newLevel,
             currentXp = currentXp % 100,
             requiredXp = newLevel * 100,
-            streakDays = 3,
+            streakDays = currentEntity?.streakDays ?: 1,
             coins = currentCoins,
             stars = currentStars,
-            totalArtworksCompleted = 5
+            totalArtworksCompleted = (currentEntity?.totalArtworksCompleted ?: 0) + 1
         )
         userProgressDao.insertOrUpdate(updated)
     }

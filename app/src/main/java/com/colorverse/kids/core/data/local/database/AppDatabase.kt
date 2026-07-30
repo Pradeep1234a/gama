@@ -46,6 +46,9 @@ interface UserProgressDao {
     @Query("SELECT * FROM user_progress WHERE id = 1")
     fun getUserProgress(): Flow<UserProgressEntity?>
 
+    @Query("SELECT * FROM user_progress WHERE id = 1")
+    suspend fun getUserProgressDirect(): UserProgressEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrUpdate(progress: UserProgressEntity)
 }
@@ -94,7 +97,9 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "colorverse_kids_db"
-                ).build()
+                )
+                .fallbackToDestructiveMigration()
+                .build()
                 INSTANCE = instance
                 instance
             }
