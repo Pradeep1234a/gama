@@ -5,10 +5,10 @@ plugins {
 }
 
 android {
-    namespace = "com.colorverse.kids"
+    namespace = "com.colorversekids.studio.app"
     compileSdk = 36
     defaultConfig {
-        applicationId = "com.colorverse.kids"
+        applicationId = "com.colorversekids.studio.app"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
